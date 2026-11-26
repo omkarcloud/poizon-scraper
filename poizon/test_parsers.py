@@ -451,6 +451,18 @@ def test_reviews_in_korean_and_russian():
     assert russian["reviews"][0]["purchased"] == [{"name": "Размер", "value": "38 RU (39 EU)"}]
 
 
+def test_reviews_count_past_a_thousand():
+    # from a thousand reviews on, the site writes the count as "1000+" (seen on 8900001978861819 in ru)
+    raw = data("reviews_ru_8900023917969329.json")
+    raw["extra"]["count"], raw["total"] = "1000+", 1294
+    folded = len(raw["extra"]["hideReviews"])
+    page = P.parse_reviews(raw, 1, 10)
+    assert folded and page["review_count"] == 1294 + folded and page["pagination"]["total_count"] == 1294
+    product = data("product_ru_8900023917969329.json")
+    product["commodityReviews"]["reviewsCount"] = "1000+"
+    assert P.parse_product(product, "ru", "en")["review_count"] == 1000
+
+
 def test_reviews_empty_pages():
     for name, page in (("reviews_none.json", 1), ("reviews_past_end.json", 9)):
         parsed = P.parse_reviews(data(name), page, 20)

@@ -471,10 +471,13 @@ def _fit(rows):
 
 
 def _rating_summary(reviews):
+    """The rating block of a product page. From a thousand reviews on the page
+    writes the count as "1000+": the count is then that 1000 (the reviews
+    endpoint counts them exactly)."""
     reviews = as_dict(reviews)
     return {
         "rating": _stars(reviews.get("spuAvgScoreNumber") or reviews.get("spuAvgScore")),
-        "review_count": to_int(reviews.get("reviewsCount")),
+        "review_count": to_count(reviews.get("reviewsCount")),
         "fit": _fit(reviews.get("sizeFeelingModule")),
         "review_topics": [{"id": _id(tag.get("tagId")), "name": clean(tag.get("tagName")), "count": to_int(tag.get("count"))}
                           for tag in as_list(reviews.get("contentTagList")) if isinstance(tag, dict)],
@@ -696,17 +699,25 @@ def parse_reviews(data, page, page_size):
     ratings_without_text, pagination}. `review_count` is the figure the
     site shows on the product; it counts the ratings left without a text,
     which the site folds away and sends beside the first page, so the
-    feed's own total (the pagination's) can be a few lower."""
+    feed's own total (the pagination's) can be a few lower. From a thousand
+    reviews on the site writes "1000+": the feed's total and the folded
+    ratings then make the figure."""
     extra = as_dict(data.get("extra"))
     rows = [_review(row) for row in as_list(data.get("contents")) if isinstance(row, dict)]
+    folded = [_review(row) for row in as_list(extra.get("hideReviews")) if isinstance(row, dict)]
     total = to_int(data.get("total")) or 0
     total = max(total, len(rows) + (page - 1) * page_size if rows else 0)
+    shown = extra.get("count")
+    count = to_int(shown)
+    if count is None and shown is not None:
+        at_least = to_count(shown)
+        count = max(at_least, total + len(folded)) if at_least is not None else None
     return {
         "rating": _stars(extra.get("scoreNumber") or extra.get("score")),
-        "review_count": to_int(extra.get("count")) if extra.get("count") is not None else total,
+        "review_count": count if shown is not None else total,
         "fit": _fit(extra.get("sizeFeelingModule")),
         "reviews": rows,
-        "ratings_without_text": [_review(row) for row in as_list(extra.get("hideReviews")) if isinstance(row, dict)],
+        "ratings_without_text": folded,
         "pagination": {"page": page, "items_per_page": page_size, "total_count": total,
                        "total_pages": math.ceil(total / page_size) if total else 0},
     }
