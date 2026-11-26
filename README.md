@@ -6,7 +6,7 @@ Poizon Scraper is a **free and open-source** scraper that gets you **unlimited**
 
 - 👟 **Full details of 1.5M+ authenticated products** — every size's live price and delivery options, style code, release date, images, 3D model, specs, rating and fit advice
 - 🔍 **Search 400+ global brands in 2 markets** — by name or style code, with 5 sorts and 9 filters, in Korea (KRW) or Russia (RUB)
-- ⭐ **Every review, up to 266 on a single sneaker** — rating, text, date, size bought, fit, foot length, buyer badges and photos
+- ⭐ **Every review, over 1,300 on a single sneaker** — rating, text, date, size bought, fit, foot length, buyer badges and photos
 - 🗂️ **9 categories & 67 subcategories** — sneakers, shoes, apparel, bags, accessories, toys, beauty, electronics and home, each listed with its products
 
 ## 👟 Example: A Full Poizon Sneaker
