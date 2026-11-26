@@ -1,0 +1,10 @@
+{
+ "code": 485,
+ "msg": "请校验验证码",
+ "data": {
+  "resultCode": 485,
+  "sessionId": "c126FXW7cadcVj7gFXFhxOgjaEVrG6EJJRFIoWK6TBoa2KW8iTVs5emGpoRUjnSs1pyqFSpiGYMZ7ZhB1q15qi",
+  "type": 2
+ },
+ "status": 485
+}

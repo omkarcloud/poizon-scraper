@@ -1,0 +1,12 @@
+services:
+  poizon-scraper:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      # Optional: leave this unset to go out from your own connection, which is fine to start.
+      # Running searches, category or brand lists back to back? Set a rotating datacenter proxy:
+      # POIZON gives one address a captcha for 10 minutes after 70 to 119 of those calls in a row.
+      # - POIZON_PROXY=http://user:pass@host:port
